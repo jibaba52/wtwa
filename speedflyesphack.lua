@@ -27,18 +27,6 @@ popupText.Text = "GOOFY SCRIPTS"
 popupText.Parent = ScreenGui
 popupText.ZIndex = 10
 
--- Fade out popup after 2 seconds
-spawn(function()
-    wait(2)
-    for i = 1, 20 do
-        popupText.TextTransparency = popupText.TextTransparency + 0.05
-        popupText.BackgroundTransparency = popupText.BackgroundTransparency + 0.05
-        wait(0.05)
-    end
-    popupText:Destroy()
-    guiFrame.Visible = true
-end)
-
 -- Main GUI Frame (based on the reference image style)
 local guiFrame = Instance.new("Frame")
 guiFrame.Size = UDim2.new(0, 280, 0, 180)
@@ -292,8 +280,9 @@ flyToggleFrame:GetAttributeChangedSignal("Toggled"):Connect(function()
                 if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
                     moveDir = moveDir - Vector3.new(0,1,0)
                 end
-                bodyVelocity.Velocity = moveDir.Unit * flySpeed
-                if moveDir.Magnitude == 0 then
+                if moveDir.Magnitude > 0 then
+                    bodyVelocity.Velocity = moveDir.Unit * flySpeed
+                else
                     bodyVelocity.Velocity = Vector3.new(0,0,0)
                 end
             end
@@ -373,4 +362,16 @@ RunService.RenderStepped:Connect(function()
     if espHackEnabled then
         updateEsp()
     end
+end)
+
+-- Corrected popup fade and GUI show
+spawn(function()
+    wait(2)
+    for i = 1, 20 do
+        popupText.TextTransparency = popupText.TextTransparency + 0.05
+        popupText.BackgroundTransparency = popupText.BackgroundTransparency + 0.05
+        wait(0.05)
+    end
+    popupText:Destroy()
+    guiFrame.Visible = true -- Move this here to ensure it shows after popup disappears
 end)
