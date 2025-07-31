@@ -1,4 +1,4 @@
--- Remastered Goofy Scripts GUI
+-- Remastered Goofy Scripts GUI with fixes
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -236,16 +236,21 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- GUI fade and show
+-- Fade out popup and show main GUI
 spawn(function()
     wait(2)
     for i = 1, 20 do
-        popup.TextTransparency += 0.05
-        popup.BackgroundTransparency += 0.05
+        popup.TextTransparency = math.clamp(popup.TextTransparency + 0.05, 0, 1)
+        popup.BackgroundTransparency = math.clamp(popup.BackgroundTransparency + 0.025, 0, 1)
         wait(0.05)
     end
     popup:Destroy()
-    mainFrame.Visible = true
+    if mainFrame then
+        mainFrame.Visible = true
+        print("Main GUI is now visible")
+    else
+        warn("mainFrame is nil!")
+    end
 end)
 
 -- Drag Logic
